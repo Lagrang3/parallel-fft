@@ -40,13 +40,15 @@ struct pfft_cube
         my_cube_fill(N),
         my_com(raw_com,mpi::comm_duplicate)
     {
-        proc_grid[0] = largest_divisor(N);
-        proc_grid[1] = N/proc_grid[0];
+        proc_grid[0] = largest_divisor(my_com.size());
+        proc_grid[1] = my_com.size()/proc_grid[0];
         
         pfft_init();
-        pfft_create_procmesh_2d(
-            my_com,proc_grid[0],proc_grid[1],&comm_cart_2d);
-            
+        if(int err = pfft_create_procmesh_2d(
+            my_com,proc_grid[0],proc_grid[1],&comm_cart_2d); err!=0)
+         {
+            throw std::runtime_error("failed to create pfft cartesian communicator");
+         }   
         ptrdiff_t local_ni[3], local_i_start[3];
         ptrdiff_t local_no[3], local_o_start[3];
         ptrdiff_t global_n[3];
@@ -59,7 +61,6 @@ struct pfft_cube
                 0,
                 local_ni,local_i_start,
                 local_no,local_o_start);
-        return;
         
         std::copy(local_ni,local_ni+3,local_len.begin());
         std::copy(local_i_start,local_i_start+3,local_start.begin());
@@ -93,7 +94,7 @@ struct pfft_cube
     
     void execute()
     {
-        //pfft_execute(my_plan);
+        pfft_execute(my_plan);
     }
     
     ~pfft_cube()
