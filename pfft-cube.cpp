@@ -78,7 +78,7 @@ struct pfft_cube
                         local_start[1]+j,
                         local_start[2]+k);
                 
-                const std::size_t pos = 
+                const ptrdiff_t pos = 
                     k + local_len[2]*( j + local_len[1]*i);
                 if(pos>=alloc_local)
                     throw std::runtime_error("pos out of range");
@@ -99,7 +99,6 @@ struct pfft_cube
     
     ~pfft_cube()
     {
-        return;
         pfft_free(my_data);
         pfft_destroy_plan(my_plan);
         pfft_cleanup();
