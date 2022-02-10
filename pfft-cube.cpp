@@ -68,6 +68,11 @@ struct pfft_cube
         
         my_data = pfft_alloc_complex(alloc_local);
         
+        my_plan =
+            pfft_plan_dft_3d(
+                global_n,
+                my_data,my_data,comm_cart_2d,PFFT_FORWARD,PFFT_ESTIMATE);
+        
         for(std::size_t i=0;i<local_len[0];++i)
             for(std::size_t j=0;j<local_len[1];++j)
             for(std::size_t k=0;k<local_len[2];++k)
@@ -86,10 +91,6 @@ struct pfft_cube
                 my_data[pos][1] = val.imag();
             }
         
-        my_plan =
-            pfft_plan_dft_3d(
-                global_n,
-                my_data,my_data,comm_cart_2d,PFFT_FORWARD,PFFT_ESTIMATE);
     }
     
     void execute()

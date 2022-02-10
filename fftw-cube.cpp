@@ -39,6 +39,11 @@ struct fftw_cube
             
         my_data = fftw_alloc_complex(alloc_local);
         
+        my_plan =
+        fftw_mpi_plan_dft_3d(
+            global_len,global_len,global_len,
+            my_data,my_data,my_com,FFTW_FORWARD,FFTW_ESTIMATE);
+        
         for(std::size_t i=0;i<local_len;++i)
             for(std::size_t j=0;j<global_len;++j)
             for(std::size_t k=0;k<global_len;++k)
@@ -50,10 +55,6 @@ struct fftw_cube
                 my_data[pos][1] = val.imag();
             }
         
-        my_plan =
-        fftw_mpi_plan_dft_3d(
-            global_len,global_len,global_len,
-            my_data,my_data,my_com,FFTW_FORWARD,FFTW_ESTIMATE);
     }
     
     void execute()
