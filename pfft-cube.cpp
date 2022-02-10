@@ -77,7 +77,7 @@ struct pfft_cube
             for(std::size_t j=0;j<local_len[1];++j)
             for(std::size_t k=0;k<local_len[2];++k)
             {
-                std::complex<double> val 
+                auto val 
                     = my_cube_fill(
                         local_start[0]+i,
                         local_start[1]+j,
